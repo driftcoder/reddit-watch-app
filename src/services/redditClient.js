@@ -58,10 +58,9 @@ function parseRedditPost(json) {
   }
 
   if (json.data.preview) {
-    images = json.data.preview.images.map((image) => image.source.url);
+    images = json.data.preview.images.map((image) => _.unescape(image.source.url));
   }
 
-  console.log(images);
   return {
     id: json.data.id,
     author: json.data.author,

@@ -84,7 +84,6 @@ export default class Subreddit extends React.PureComponent {
       }, () => {
         setTimeout(() => {
           // We need to delay this to get correct conteiner height
-          console.log(document.body.scrollHeight - window.innerHeight);
           notificationSound.play();
           this.state.autoScroll && scrollTo(
             0,
