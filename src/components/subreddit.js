@@ -54,44 +54,29 @@ export default class Subreddit extends React.PureComponent {
       timerTicks: 0,
       lastPostId: null,
       autoScroll: true,
-      newPost: false,
     }
     this.timerTickEvent = this.timerTickEvent.bind(this);
-    this.scrollEvent = this.scrollEvent.bind(this);
+    this.scrollEvent = _.throttle(this.scrollEvent.bind(this), 100);
+    this.autoScrollIfNeeded = _.debounce(this.autoScrollIfNeeded.bind(this), 500);
   }
 
   componentWillMount() {
     this.props.fetchNewPostsInSubreddit(this.props.id);
     setInterval(this.timerTickEvent, 1000);
-    window.addEventListener('scroll', _.throttle(this.scrollEvent, 100));
+    window.addEventListener('scroll', this.scrollEvent);
   }
 
   componentWillReceiveProps(nextProps) {
     const lastPostId = _.last(nextProps.data.postsByDate).id;
 
     if (this.state.lastPostId != lastPostId) {
-      this.setState({
-        lastPostId,
-        newPost: true,
-      });
+      this.setState({lastPostId});
+      notificationSound.play();
     }
   }
 
   componentDidUpdate() {
-    if (this.state.newPost) {
-      this.setState({
-        newPost: false,
-      }, () => {
-        setTimeout(() => {
-          // We need to delay this to get correct conteiner height
-          notificationSound.play();
-          this.state.autoScroll && scrollTo(
-            0,
-            document.body.scrollHeight - window.innerHeight
-          );
-        }, 500);
-      });
-    }
+    this.autoScrollIfNeeded();
   }
 
   timerTickEvent() {
@@ -106,9 +91,20 @@ export default class Subreddit extends React.PureComponent {
   }
 
   scrollEvent() {
-    const autoScroll = (window.innerHeight + window.scrollY) >= document.body.scrollHeight;
+    this.setState({autoScroll: this.isScrollAtBottom()});
+  }
 
-    this.setState({autoScroll});
+  isScrollAtBottom() {
+    return (window.innerHeight + window.scrollY) >= document.body.scrollHeight;
+  }
+
+  autoScrollIfNeeded() {
+    if (this.state.autoScroll && !this.isScrollAtBottom()) {
+      scrollTo(
+        0,
+        document.body.scrollHeight - window.innerHeight
+      );
+    }
   }
 
   renderPostWithId(postId, last) {

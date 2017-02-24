@@ -49,9 +49,9 @@ export default class Post extends React.PureComponent {
     }
   }
 
-  renderImage(src) {
+  renderImage(src, index) {
     return (
-      <img style={style.image} src={src}/>
+      <img key={index} style={style.image} src={src}/>
     );
   }
 
