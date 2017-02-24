@@ -2,32 +2,40 @@ import _ from 'lodash';
 import Howler from 'howler';
 import { Line } from 'rc-progress';
 import React from 'react';
-import scrollTo from 'scroll-to'
+import TWEEN from 'tween.js';
 
 import config from 'config/config.js';
 import Post from 'components/post.js';
 
 const style = {
   main: {
+    position: 'absolute',
+    top: 0,
+    bottom: 0,
+    left: 0,
+    right: 0,
     fontFamily: 'AppFont',
     fontSize: '14px',
     color: '#999999',
+  },
+  posts: {
+    position: 'absolute',
+    top: 0,
+    bottom: '21px',
+    left: 0,
+    right: 0,
+    overflow: 'scroll',
     padding: '5px',
   },
   post: {
     marginBottom: '15px',
   },
-  lastPost: {
-    marginBottom: '25px',
-  },
   bottomBar: {
-    position: 'fixed',
+    position: 'absolute',
     left: 0,
     right: 0,
     bottom: 0,
     height: '20px',
-    lineHeight: '20px',
-    backgroundColor: '#111111',
     borderTop: '1px solid #999999',
     padding: '0 5px',
   },
@@ -62,10 +70,10 @@ export default class Subreddit extends React.PureComponent {
     this.autoScrollIfNeeded = _.debounce(this.autoScrollIfNeeded.bind(this), 500);
   }
 
-  componentWillMount() {
+  componentDidMount() {
     this.props.fetchNewPostsInSubreddit(this.props.id);
     setInterval(this.timerTickEvent, 1000);
-    window.addEventListener('scroll', this.scrollEvent);
+    this.postsWrapper.addEventListener('scroll', this.scrollEvent);
   }
 
   componentWillReceiveProps(nextProps) {
@@ -96,24 +104,34 @@ export default class Subreddit extends React.PureComponent {
     this.setState({autoScroll: this.isScrollAtBottom()});
   }
 
-  isScrollAtBottom() {
-    return (window.innerHeight + window.scrollY) >= document.body.scrollHeight;
-  }
-
   autoScrollIfNeeded() {
     if (this.state.autoScroll && !this.isScrollAtBottom()) {
-      scrollTo(
-        0,
-        document.body.scrollHeight - window.innerHeight
-      );
+      var tween = new TWEEN.Tween({x: 0, y: 0})
+        .to({x: 400, y: 400}, 1000)
+        .onUpdate(function () {
+          console.log(this);
+        })
+        .start();
+
+      function animate(time) {
+        requestAnimationFrame(animate);
+        TWEEN.update(time);
+      }
+
+      requestAnimationFrame(animate);
+      this.postsWrapper.scrollTop = this.postsWrapper.scrollHeight - this.postsWrapper.offsetHeight;
     }
+  }
+
+  isScrollAtBottom() {
+    return (this.postsWrapper.offsetHeight + this.postsWrapper.scrollTop) >= this.postsWrapper.scrollHeight;
   }
 
   renderPostWithId(postId, last) {
     const postStyle = last ? style.lastPost : style.post;
 
     return(
-      <div key={postId} style={postStyle}>
+      <div key={postId} style={last ? null : style.post}>
         <Post
           post={this.props.data.posts[postId]}
           revisions={this.props.data.postRevisions[postId]}
@@ -132,9 +150,14 @@ export default class Subreddit extends React.PureComponent {
 
     return (
       <div style={style.main}>
-        {postIds.map((postId) => this.renderPostWithId(postId, postId == lastPostId))}
+        <div
+          ref={(postsWrapper) => {this.postsWrapper = postsWrapper}}
+          style={style.posts}
+        >
+          {postIds.map((postId) => this.renderPostWithId(postId, postId == lastPostId))}
+        </div>
         <div style={style.bottomBar}>
-          <span style={style.bottmBarItem}>
+          <div style={style.bottmBarItem}>
             <Line
               percent={progressLeftPercent}
               strokeWidth={7}
@@ -142,10 +165,10 @@ export default class Subreddit extends React.PureComponent {
               trailWidth={0}
               trailColor="#333333"
             />
-          </span>
-          <span style={style.bottmBarItem}>
+          </div>
+          <div style={style.bottmBarItem}>
             {this.state.autoScroll && 'autoscroll'}
-          </span>
+          </div>
         </div>
       </div>
     );
