@@ -1,0 +1,15 @@
+- Add markdown parsing
+  - dangerouslySetInnerHTML for marked body
+  - add style tag
+    <style dangerouslySetInnerHTML={{__html: '
+      .styled {
+        color: blue;
+      }
+    '}} />
+  - the style tag needs to control margin of first and last <p> tags.
+    - What about situation when <p> isn't the first or last tag?
+  - Override link renderer to open externally
+  - Add pagination
+    - Open page should not shift it's post as they are pushed down
+  - Add meta info (votes, comment count)
+  - Bottom bar iconization
