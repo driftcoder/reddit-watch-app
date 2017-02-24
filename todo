@@ -1,4 +1,5 @@
-- Issue with autoscroll when post is edited
+- Make the timer smoother
+- Add subreddit select screen
 - Add copy and paste
 - Add markdown parsing
   - dangerouslySetInnerHTML for marked body

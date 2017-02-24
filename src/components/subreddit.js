@@ -1,5 +1,6 @@
 import _ from 'lodash';
 import Howler from 'howler';
+import { Line } from 'rc-progress';
 import React from 'react';
 import scrollTo from 'scroll-to'
 
@@ -32,7 +33,8 @@ const style = {
   },
   bottmBarItem: {
     display: 'inline-block',
-    width: '120px',
+    width: '100px',
+    marginRight: '10px',
   },
 };
 
@@ -123,13 +125,23 @@ export default class Subreddit extends React.PureComponent {
   render() {
     const postIds = this.props.data.postsByDate.slice(-50).map((postByDate) => postByDate.id);
     const lastPostId = _.last(postIds);
+    const progressLeftPercent =
+      config.refreshFrequencyInSeconds < 1 ?
+      0 :
+      100 * (config.refreshFrequencyInSeconds - this.state.timerTicks) / config.refreshFrequencyInSeconds;
 
     return (
       <div style={style.main}>
         {postIds.map((postId) => this.renderPostWithId(postId, postId == lastPostId))}
         <div style={style.bottomBar}>
           <span style={style.bottmBarItem}>
-            Update in: {config.refreshFrequencyInSeconds - this.state.timerTicks}
+            <Line
+              percent={progressLeftPercent}
+              strokeWidth={7}
+              strokeColor="#73AF00"
+              trailWidth={0}
+              trailColor="#333333"
+            />
           </span>
           <span style={style.bottmBarItem}>
             {this.state.autoScroll && 'autoscroll'}
