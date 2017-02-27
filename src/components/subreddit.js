@@ -42,25 +42,40 @@ const style = {
   },
   bottmBarItem: {
     display: 'inline-block',
-    width: '100px',
     height: '20px',
     lineHeight: '20px',
     marginRight: '10px',
     float: 'left',
   },
-  timerBarFull: {
-    position: 'absolute',
-    top: '7px',
-    height: '8px',
-    width: '100px',
-    backgroundColor: '#73AF00',
-    borderRadius: '4px',
-    transition: `width 0.5s`,
+  bottmBarItemOff: {
+    display: 'inline-block',
+    height: '20px',
+    lineHeight: '20px',
+    marginRight: '10px',
+    float: 'left',
+    color: '#333333',
+  },
+  bottmBarOptionItem: {
+    display: 'inline-block',
+    height: '20px',
+    lineHeight: '20px',
+    marginRight: '10px',
+    float: 'right',
+    cursor: 'pointer',
+  },
+  bottmBarOptionItemOff: {
+    display: 'inline-block',
+    height: '20px',
+    lineHeight: '20px',
+    marginRight: '10px',
+    float: 'right',
+    color: '#333333',
+    cursor: 'pointer',
   },
   timerBarFull: {
     position: 'absolute',
     top: '7px',
-    height: '8px',
+    height: '7px',
     width: '100px',
     backgroundColor: '#73AF00',
     borderRadius: '4px',
@@ -71,11 +86,10 @@ const style = {
     transition: 'width ' + (config.refreshFrequencyInSeconds - timerBarRefilTimeInSeconds) +'s linear',
   },
   timerBarShadow: {
-    position: 'absolute',
-    top: '7px',
-    height: '8px',
+    margin: '7px 0 0',
+    height: '7px',
     width: '100px',
-    backgroundColor: '#222222',
+    backgroundColor: '#333333',
     borderRadius: '4px',
   },
 };
@@ -97,10 +111,12 @@ export default class Subreddit extends React.PureComponent {
     this.state = {
       lastPostId: null,
       autoScroll: true,
+      showImages: true,
     }
     this.fetchNewPosts = this.fetchNewPosts.bind(this);
     this.scrollEvent = _.throttle(this.scrollEvent.bind(this), 100);
     this.autoScrollIfNeeded = _.debounce(this.autoScrollIfNeeded.bind(this), 500);
+    this.toggleShowImages = this.toggleShowImages.bind(this);
   }
 
   componentDidMount() {
@@ -162,6 +178,10 @@ export default class Subreddit extends React.PureComponent {
     return (this.postsWrapper.offsetHeight + this.postsWrapper.scrollTop) >= this.postsWrapper.scrollHeight;
   }
 
+  toggleShowImages() {
+    this.setState((state) => ({showImages: !state.showImages}));
+  }
+
   renderPostWithId(postId, last) {
     const postStyle = last ? style.lastPost : style.post;
 
@@ -170,6 +190,7 @@ export default class Subreddit extends React.PureComponent {
         <Post
           post={this.props.data.posts[postId]}
           revisions={this.props.data.postRevisions[postId]}
+          showImages={this.state.showImages}
         />
       </div>
     );
@@ -189,8 +210,11 @@ export default class Subreddit extends React.PureComponent {
             <div style={style.timerBarShadow}/>
             <div ref={(timerBar) => this.timerBar = timerBar} style={style.timerBarFull}/>
           </div>
-          <div style={style.bottmBarItem}>
-            {this.state.autoScroll && (<i className="fa fa-arrow-circle-down"/>)}
+          <div style={this.state.autoScroll ? style.bottmBarItem : style.bottmBarItemOff}>
+            <i className="fa fa-arrow-circle-down"/>
+          </div>
+          <div style={this.state.showImages ? style.bottmBarOptionItem : style.bottmBarOptionItemOff}>
+            <i className="fa fa-picture-o" onClick={this.toggleShowImages}/>
           </div>
         </div>
       </div>

@@ -43,6 +43,7 @@ export default class Post extends React.PureComponent {
   static propTypes = {
     post: React.PropTypes.object.isRequired,
     revisions: React.PropTypes.array,
+    showImages: React.PropTypes.bool,
   }
 
   constructor(props) {
@@ -88,7 +89,9 @@ export default class Post extends React.PureComponent {
             </Link>
           </div>
         )}
-        {this.props.post.images && (<div>{this.props.post.images.map(this.renderImage)}</div>)}
+        {this.props.showImages && this.props.post.images && (
+          <div>{this.props.post.images.map(this.renderImage)}</div>
+        )}
         <div>{this.props.post.body}</div>
       </div>
     );
