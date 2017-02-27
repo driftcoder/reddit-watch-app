@@ -109,33 +109,30 @@ export default class Subreddit extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      lastPostId: null,
+      postCount: 0,
       autoScroll: true,
       showImages: true,
     }
     this.fetchNewPosts = this.fetchNewPosts.bind(this);
-    this.scrollEvent = _.throttle(this.scrollEvent.bind(this), 100);
-    this.autoScrollIfNeeded = _.debounce(this.autoScrollIfNeeded.bind(this), 500);
+    this.autoScrollIfNeeded = this.autoScrollIfNeeded.bind(this);
     this.toggleShowImages = this.toggleShowImages.bind(this);
+    this.scrollEvent = _.throttle(this.scrollEvent.bind(this), 100);
   }
 
   componentDidMount() {
     this.fetchNewPosts()
     setInterval(this.fetchNewPosts, config.refreshFrequencyInSeconds * 1000);
+    setInterval(this.autoScrollIfNeeded, 1000);
     this.postsWrapper.addEventListener('scroll', this.scrollEvent);
   }
 
   componentWillReceiveProps(nextProps) {
-    const lastPostId = _.last(nextProps.data.postsByDate).id;
+    const postCount = nextProps.data.knownPosts.length;
 
-    if (this.state.lastPostId != lastPostId) {
-      this.setState({lastPostId});
+    if (this.state.postCount != postCount) {
+      this.setState({postCount});
       notificationSound.play();
     }
-  }
-
-  componentDidUpdate() {
-    this.autoScrollIfNeeded();
   }
 
   fetchNewPosts() {
@@ -154,6 +151,8 @@ export default class Subreddit extends React.Component {
 
   autoScrollIfNeeded() {
     if (this.state.autoScroll && !this.isScrollAtBottom()) {
+      console.log('SCROLLING')
+      console.log(new Date());
       let tweenValues = {scroll: this.postsWrapper.scrollTop};
       let tween = new Tween(tweenValues)
         .to({scroll: this.postsWrapper.scrollHeight - this.postsWrapper.offsetHeight}, 1000)
@@ -197,13 +196,12 @@ export default class Subreddit extends React.Component {
   }
 
   render() {
-    const postIds = this.props.data.postsByDate.slice(-50).map((postByDate) => postByDate.id);
-    const lastPostId = _.last(postIds);
+    const postIds = this.props.data.knownPosts.slice(-50);
 
     return (
       <div style={style.main}>
         <div ref={(postsWrapper) => this.postsWrapper = postsWrapper} style={style.posts}>
-          {postIds.map((postId) => this.renderPostWithId(postId, postId == lastPostId))}
+          {postIds.map((postId) => this.renderPostWithId(postId, postId == _.last(postIds)))}
         </div>
         <div style={style.bottomBar}>
           <div style={style.bottmBarItem}>

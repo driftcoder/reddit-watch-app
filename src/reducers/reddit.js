@@ -4,31 +4,25 @@ import {PROCESS_POSTS} from 'actions/reddit.js';
 
 const initialState = {
   posts: {},
+  knownPosts: [],
   postRevisions: {},
-  knownPosts: {},
-  postsByDate: [],
+  knownPostRevisions: {},
 };
 
 export default (state = initialState, action) => {
   switch (action.type) {
     case PROCESS_POSTS:
-      let newState = Object.assign({}, state);
+      let newState = _.merge({}, state);
 
-      action.data.forEach((post) => {
-        if (!newState.knownPosts[post.id]) {
-          // New Post
-          const postByDate = {
-            id: post.id,
-            date: post.date
-          };
-
-          newState.knownPosts[post.id] = [post.hash];
+      action.data.reverse().forEach((post) => {
+        if (!newState.posts[post.id]) {
+          newState.knownPosts.push(post.id);
           newState.postRevisions[post.id] = [];
-          newState.postsByDate.splice(_.sortedIndexBy(newState.postsByDate, postByDate, 'date'), 0, postByDate);
-        } else if (!newState.knownPosts[post.id].includes(post.hash)) {
+          newState.knownPostRevisions[post.id] = [post.hash];
+        } else if (!newState.knownPostRevisions[post.id].includes(post.hash)) {
           // New revision
           newState.postRevisions[post.id].push(newState.posts[post.id]);
-          newState.knownPosts[post.id].push(post.hash);
+          newState.knownPostRevisions[post.id].push(post.hash);
         }
 
         newState.posts[post.id] = post;

@@ -13,7 +13,10 @@ let first = true;
 export function fetchNewPostsInSubreddit(subreddit) {
   //return fakeFetchNewPostsInSubreddit(subreddit);
 
-  return fetch(subreddit.replace(/(.*)/, API_ENDPOINT_PATTERN))
+  return fetch(
+    subreddit.replace(/(.*)/, API_ENDPOINT_PATTERN),
+    {headers: {'Cache-Control': 'no-cache'}}
+  )
     .then((response) => {
       if (response.status != 200) {
         throw new Error(ERROR_BAD_RESPONSE);
