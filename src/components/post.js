@@ -6,6 +6,9 @@ import config from 'config/config.js';
 import Link from 'components/link.js';
 
 const style = {
+  post: {
+    overflowWrap: 'break-word',
+  },
   title: {
     color: '#73AF00',
     cursor: 'pointer',
@@ -61,7 +64,7 @@ export default class Post extends React.PureComponent {
 
   render() {
     return (
-      <div>
+      <div style={style.post}>
         <div>
           <Link
             onClick={() => electron.shell.openExternal(this.props.post.permalink)}

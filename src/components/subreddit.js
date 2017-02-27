@@ -98,7 +98,7 @@ const notificationSound = new Howler.Howl({
   src: ['../assets/notify.mp3']
 });
 
-export default class Subreddit extends React.PureComponent {
+export default class Subreddit extends React.Component {
   static propTypes = {
     fetchNewPostsInSubreddit: React.PropTypes.func.isRequired,
 
