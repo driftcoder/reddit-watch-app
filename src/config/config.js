@@ -1,4 +1,4 @@
 export default {
-  refreshFrequencyInSeconds: 10,
+  refreshFrequencyInSeconds: 60,
   maxImageWidth: '400px',
 }

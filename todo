@@ -1,4 +1,3 @@
-- Make the timer smoother
 - Add subreddit select screen
 - Add copy and paste
 - Add markdown parsing
@@ -14,7 +13,5 @@
   - Override link renderer to open externally
 - Add pagination
  - Open page should not shift it's post as they are pushed down
- - Add meta info (votes, comment count, raw view in dev mode)
- - Add revisions
- - Bottom bar iconization
+- Add revisions
 - Add embeds

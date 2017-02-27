@@ -3,7 +3,7 @@ import marked from 'marked';
 import React from 'react';
 
 import config from 'config/config.js';
-import Hoverable from 'components/hoverable.js';
+import Link from 'components/link.js';
 
 const style = {
   title: {
@@ -20,7 +20,10 @@ const style = {
   },
   category: {
     color: '#33A6BC',
-    marginLeft: '10px',
+    marginLeft: '20px',
+  },
+  postMeta: {
+    marginLeft: '20px',
   },
   link: {
     color: '#CA6400',
@@ -59,26 +62,33 @@ export default class Post extends React.PureComponent {
     return (
       <div>
         <div>
-          <span onClick={() => electron.shell.openExternal(this.props.post.permalink)}>
-            <Hoverable style={style.title} hoverStyle={style.titleHover}>
-              {this.props.post.title}
-            </Hoverable>
-          </span>
+          <Link
+            onClick={() => electron.shell.openExternal(this.props.post.permalink)}
+            style={style.title}
+            hoverStyle={style.titleHover}
+          >
+            {this.props.post.title}
+          </Link>
         </div>
         <div>
           <span style={style.date}>{dateformat(this.props.post.date * 1000, 'h:MM:ss TT')}</span>
-          <span style={style.category}>{this.props.post.category}</span>
+          {this.props.post.category && (<span style={style.category}>{this.props.post.category}</span>)}
+          <span style={style.postMeta}><i className="fa fa-comment-o"/> {this.props.post.commentsCount}</span>
+          <span style={style.postMeta}><i className="fa fa-thumbs-o-up"/> {this.props.post.upVotes}</span>
+          <span style={style.postMeta}><i className="fa fa-thumbs-o-down"/> {this.props.post.downVotes}</span>
         </div>
         {this.props.post.url && (
           <div>
-            <span onClick={() => electron.shell.openExternal(this.props.post.url)}>
-              <Hoverable style={style.link} hoverStyle={style.linkHover}>
-                {this.props.post.url}
-              </Hoverable>
-            </span>
+            <Link
+              onClick={() => electron.shell.openExternal(this.props.post.url)}
+              style={style.link}
+              hoverStyle={style.linkHover}
+            >
+              {this.props.post.url}
+            </Link>
           </div>
         )}
-        {this.props.post.images.map(this.renderImage)}
+        {this.props.post.images && (<div>{this.props.post.images.map(this.renderImage)}</div>)}
         <div>{this.props.post.body}</div>
       </div>
     );

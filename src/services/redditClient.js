@@ -11,7 +11,7 @@ const ERROR_INVALID_JSON = 'Bad response format';
 let first = true;
 
 export function fetchNewPostsInSubreddit(subreddit) {
-  return fakeFetchNewPostsInSubreddit(subreddit);
+  //return fakeFetchNewPostsInSubreddit(subreddit);
 
   return fetch(subreddit.replace(/(.*)/, API_ENDPOINT_PATTERN))
     .then((response) => {
@@ -33,7 +33,7 @@ function fakeFetchNewPostsInSubreddit(subreddit) {
       const stubB = require('services/redditStubB.json');
       resolve(parseRedditPosts(first ? stubA : stubB));
       first = !first;
-    }, 10);
+    }, 200);
   });
 }
 
