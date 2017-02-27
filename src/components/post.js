@@ -40,6 +40,9 @@ const style = {
   image: {
     maxWidth: config.maxImageWidth,
   },
+  bigIcon: {
+    fontSize: '18px',
+  },
 };
 
 export default class Post extends React.PureComponent {
@@ -96,7 +99,7 @@ export default class Post extends React.PureComponent {
           <div>{this.props.post.images.map(this.renderImage)}</div>
         )}
         {this.props.post.images.length > 0 && !this.props.showImages && (
-          <div>[IMAGE]</div>
+          <div><i style={style.bigIcon} className="fa fa-picture-o"/></div>
         )}
         <div>{this.props.post.body}</div>
       </div>
