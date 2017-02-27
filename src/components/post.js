@@ -84,7 +84,7 @@ export default class Post extends React.PureComponent {
           <span style={style.postMeta}><i className="fa fa-thumbs-o-up"/> {this.props.post.upVotes}</span>
           <span style={style.postMeta}><i className="fa fa-thumbs-o-down"/> {this.props.post.downVotes}</span>
           {this.props.revisions.length > 0 && (
-            <span style={style.postMeta}><i className="fa fa-version"/> {this.props.revisions.length}</span>
+            <span style={style.postMeta}><i className="fa fa-code-fork"/> {this.props.revisions.length}</span>
           )}
         </div>
         {this.props.post.url && (
