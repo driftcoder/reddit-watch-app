@@ -89,8 +89,11 @@ export default class Post extends React.PureComponent {
             </Link>
           </div>
         )}
-        {this.props.showImages && this.props.post.images && (
+        {this.props.post.images.length > 0 && this.props.showImages && (
           <div>{this.props.post.images.map(this.renderImage)}</div>
+        )}
+        {this.props.post.images.length > 0 && !this.props.showImages && (
+          <div>[IMAGE]</div>
         )}
         <div>{this.props.post.body}</div>
       </div>

@@ -20,7 +20,7 @@ export default class Link extends React.PureComponent {
     return (
       <span
         style={this.state.style}
-        onClick={() => this.props.onClick}
+        onClick={this.props.onClick}
         onMouseOver={() => this.setState({style: this.props.hoverStyle})}
         onMouseOut={() => this.setState({style: this.props.style})}
       >
