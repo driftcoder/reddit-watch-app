@@ -2,19 +2,13 @@ import dateformat from 'dateformat';
 import marked from 'marked';
 import React from 'react';
 
-import config from 'config/config.js';
 import Link from 'components/link.js';
+import Image from 'components/post/image.js';
+import Title from 'components/post/title.js';
 
 const style = {
   post: {
     overflowWrap: 'break-word',
-  },
-  title: {
-    color: '#73AF00',
-    textDecoration: 'none',
-  },
-  titleHover: {
-    color: '#73AF00',
   },
   date: {
     color: '#C6003F',
@@ -30,15 +24,6 @@ const style = {
     color: '#CA6400',
     textDecoration: 'none',
   },
-  linkHover: {
-    color: '#CA6400',
-  },
-  image: {
-    maxWidth: config.maxImageWidth,
-  },
-  bigIcon: {
-    fontSize: '18px',
-  },
 };
 
 export default class Post extends React.PureComponent {
@@ -50,14 +35,13 @@ export default class Post extends React.PureComponent {
 
   constructor(props) {
     super(props);
-    this.state = {
-      titleStyle: style.title,
-    }
+
+    this.renderImage = this.renderImage.bind(this);
   }
 
   renderImage(src, index) {
     return (
-      <img key={index} style={style.image} src={src}/>
+      <Image key={index} src={src} collapsed={!this.props.showImages}/>
     );
   }
 
@@ -65,13 +49,7 @@ export default class Post extends React.PureComponent {
     return (
       <div style={style.post}>
         <div>
-          <Link
-            href={this.props.post.permalink}
-            style={style.title}
-            hoverStyle={style.titleHover}
-          >
-            {this.props.post.title}
-          </Link>
+          <Title href={this.props.post.permalink} text={this.props.post.title}/>
         </div>
         <div>
           <span style={style.date}>{dateformat(this.props.post.date * 1000, 'h:MM:ss TT')}</span>
@@ -85,20 +63,13 @@ export default class Post extends React.PureComponent {
         </div>
         {this.props.post.url && (
           <div>
-            <Link
-              href={this.props.post.url}
-              style={style.link}
-              hoverStyle={style.linkHover}
-            >
+            <Link href={this.props.post.url} style={style.link}>
               {this.props.post.url}
             </Link>
           </div>
         )}
-        {this.props.post.images.length > 0 && this.props.showImages && (
+        {this.props.post.images.length > 0 && (
           <div>{this.props.post.images.map(this.renderImage)}</div>
-        )}
-        {this.props.post.images.length > 0 && !this.props.showImages && (
-          <div><i style={style.bigIcon} className="fa fa-picture-o"/></div>
         )}
         <div>{this.props.post.body}</div>
       </div>

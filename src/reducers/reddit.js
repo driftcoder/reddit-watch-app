@@ -13,10 +13,11 @@ const initialState = {
 export default (state = initialState, action) => {
   switch (action.type) {
     case PROCESS_POSTS:
-      let newState = _.merge({}, state);
+      let newState = _.merge({}, state, {error: null});
 
       action.data.reverse().forEach((post) => {
         if (!newState.posts[post.id]) {
+          // New post
           newState.knownPosts.push(post.id);
           newState.postRevisions[post.id] = [];
           newState.knownPostRevisions[post.id] = [post.hash];
@@ -28,8 +29,6 @@ export default (state = initialState, action) => {
 
         newState.posts[post.id] = post;
       });
-
-      newState.error = null;
 
       return newState;
     case FETCH_FAILED:
