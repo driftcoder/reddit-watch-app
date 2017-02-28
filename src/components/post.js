@@ -11,12 +11,10 @@ const style = {
   },
   title: {
     color: '#73AF00',
-    cursor: 'pointer',
+    textDecoration: 'none',
   },
   titleHover: {
     color: '#73AF00',
-    cursor: 'pointer',
-    textDecoration: 'underline',
   },
   date: {
     color: '#C6003F',
@@ -30,12 +28,10 @@ const style = {
   },
   link: {
     color: '#CA6400',
-    cursor: 'pointer',
+    textDecoration: 'none',
   },
   linkHover: {
     color: '#CA6400',
-    cursor: 'pointer',
-    textDecoration: 'underline',
   },
   image: {
     maxWidth: config.maxImageWidth,
@@ -70,7 +66,7 @@ export default class Post extends React.PureComponent {
       <div style={style.post}>
         <div>
           <Link
-            onClick={() => electron.shell.openExternal(this.props.post.permalink)}
+            href={this.props.post.permalink}
             style={style.title}
             hoverStyle={style.titleHover}
           >
@@ -90,7 +86,7 @@ export default class Post extends React.PureComponent {
         {this.props.post.url && (
           <div>
             <Link
-              onClick={() => electron.shell.openExternal(this.props.post.url)}
+              href={this.props.post.url}
               style={style.link}
               hoverStyle={style.linkHover}
             >

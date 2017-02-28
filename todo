@@ -1,5 +1,4 @@
 - Add subreddit select screen
-- Add copy and paste
 - Add markdown parsing
   - dangerouslySetInnerHTML for marked body
   - add style tag
@@ -15,3 +14,4 @@
  - Open page should not shift it's post as they are pushed down
 - Add revisions
 - Add embeds
+- Add copy image

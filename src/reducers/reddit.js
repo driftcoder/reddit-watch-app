@@ -1,12 +1,13 @@
 import _ from 'lodash';
 
-import {PROCESS_POSTS} from 'actions/reddit.js';
+import { FETCH_FAILED, PROCESS_POSTS } from 'actions/reddit.js';
 
 const initialState = {
   posts: {},
   knownPosts: [],
   postRevisions: {},
   knownPostRevisions: {},
+  error: null,
 };
 
 export default (state = initialState, action) => {
@@ -28,7 +29,11 @@ export default (state = initialState, action) => {
         newState.posts[post.id] = post;
       });
 
+      newState.error = null;
+
       return newState;
+    case FETCH_FAILED:
+      return _.merge({}, state, {error: action.message});
     default:
       return state;
   }

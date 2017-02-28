@@ -2,6 +2,7 @@ const path = require('path');
 const url = require('url');
 
 const electron = require('electron');
+const electronContextMenu = require('electron-context-menu');
 
 const config = require(path.resolve('./static/config.js'));
 const constants = require(path.resolve('./static/constants.js'));
@@ -19,6 +20,13 @@ let applicationMenu = [{
 }];
 
 if (process.env.NODE_ENV === constants.DEVELOPMENT) {
+  applicationMenu.push({
+    label: 'Edit',
+    submenu: [
+      {role: 'copy'},
+      {role: 'selectall'},
+    ],
+  });
   applicationMenu.push({
     label: 'Dev',
     submenu: [
@@ -54,6 +62,8 @@ function createWindow () {
     }
   });
 }
+
+electronContextMenu({showInspectElement: process.env.NODE_ENV === constants.DEVELOPMENT});
 
 app.on('ready', createWindow);
 

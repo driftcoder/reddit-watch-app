@@ -40,14 +40,14 @@ const style = {
     borderTop: '1px solid #999999',
     padding: '0 5px',
   },
-  bottmBarItem: {
+  bottomBarItem: {
     display: 'inline-block',
     height: '20px',
     lineHeight: '20px',
     marginRight: '10px',
     float: 'left',
   },
-  bottmBarItemOff: {
+  bottomBarItemOff: {
     display: 'inline-block',
     height: '20px',
     lineHeight: '20px',
@@ -55,7 +55,7 @@ const style = {
     float: 'left',
     color: '#333333',
   },
-  bottmBarOptionItem: {
+  bottomBarOptionItem: {
     display: 'inline-block',
     height: '20px',
     lineHeight: '20px',
@@ -63,7 +63,7 @@ const style = {
     float: 'right',
     cursor: 'pointer',
   },
-  bottmBarOptionItemOff: {
+  bottomBarOptionItemOff: {
     display: 'inline-block',
     height: '20px',
     lineHeight: '20px',
@@ -151,8 +151,6 @@ export default class Subreddit extends React.Component {
 
   autoScrollIfNeeded() {
     if (this.state.autoScroll && !this.isScrollAtBottom()) {
-      console.log('SCROLLING')
-      console.log(new Date());
       let tweenValues = {scroll: this.postsWrapper.scrollTop};
       let tween = new Tween(tweenValues)
         .to({scroll: this.postsWrapper.scrollHeight - this.postsWrapper.offsetHeight}, 1000)
@@ -204,14 +202,19 @@ export default class Subreddit extends React.Component {
           {postIds.map((postId) => this.renderPostWithId(postId, postId == _.last(postIds)))}
         </div>
         <div style={style.bottomBar}>
-          <div style={style.bottmBarItem}>
+          <div style={style.bottomBarItem}>
             <div style={style.timerBarShadow}/>
             <div ref={(timerBar) => this.timerBar = timerBar} style={style.timerBarFull}/>
           </div>
-          <div style={this.state.autoScroll ? style.bottmBarItem : style.bottmBarItemOff}>
+          <div style={this.state.autoScroll ? style.bottomBarItem : style.bottomBarItemOff}>
             <i className="fa fa-arrow-circle-down"/>
           </div>
-          <div style={this.state.showImages ? style.bottmBarOptionItem : style.bottmBarOptionItemOff}>
+          {this.props.data.error && (
+            <div style={style.bottomBarItem}>
+              {this.props.data.error}
+            </div>
+          )}
+          <div style={this.state.showImages ? style.bottomBarOptionItem : style.bottomBarOptionItemOff}>
             <i className="fa fa-picture-o" onClick={this.toggleShowImages}/>
           </div>
         </div>
