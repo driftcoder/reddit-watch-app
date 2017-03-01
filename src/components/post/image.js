@@ -4,7 +4,6 @@ import config from 'config/config.js';
 
 const style = {
   image: {
-    width: '100%',
     maxWidth: config.maxImageWidth,
   },
   icon: {
