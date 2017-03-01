@@ -1,5 +1,9 @@
+- Refactor more
+- Better API call. raw_json
+- Hash needs to include title, body, url, image_url
 - Add subreddit select screen
-- Add markdown parsing
+- Media embeds
+- Markdown parsing
   - dangerouslySetInnerHTML for marked body
   - add style tag
     <style dangerouslySetInnerHTML={{__html: '
@@ -10,8 +14,10 @@
   - the style tag needs to control margin of first and last <p> tags.
     - What about situation when <p> isn't the first or last tag?
   - Override link renderer to open externally
+- Add revision navigations
 - Add pagination
  - Open page should not shift it's post as they are pushed down
-- Add revisions
-- Add embeds
 - Add copy image
+- Auto body parsing (links, images)
+- Stars
+- Tabs
