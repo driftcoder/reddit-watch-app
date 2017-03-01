@@ -5,8 +5,7 @@ import { Tween, Easing } from 'tween.js';
 
 import config from 'config/config.js';
 import Post from 'components/post.js';
-
-const timerBarRefilTimeInSeconds = 0.5;
+import TimerBar from 'components/timerBar.js';
 
 const style = {
   main: {
@@ -72,31 +71,14 @@ const style = {
     color: '#333333',
     cursor: 'pointer',
   },
-  timerBarFull: {
-    position: 'absolute',
-    top: '7px',
-    height: '7px',
-    width: '100px',
-    backgroundColor: '#73AF00',
-    borderRadius: '4px',
-    transition: 'width ' + timerBarRefilTimeInSeconds +'s linear',
-  },
-  timerBarRunning: {
-    width: '8px',
-    transition: 'width ' + (config.refreshFrequencyInSeconds - timerBarRefilTimeInSeconds) +'s linear',
-  },
-  timerBarShadow: {
-    margin: '7px 0 0',
-    height: '7px',
-    width: '100px',
-    backgroundColor: '#333333',
-    borderRadius: '4px',
-  },
 };
 
 const notificationSound = new Howler.Howl({
   src: ['../assets/notify.mp3']
 });
+
+let lastPostCount;
+let autoScroll;
 
 export default class Subreddit extends React.Component {
   static propTypes = {
@@ -108,9 +90,10 @@ export default class Subreddit extends React.Component {
 
   constructor(props) {
     super(props);
+    lastPostCount = 0;
+    autoScroll = true;
     this.state = {
-      postCount: 0,
-      autoScroll: true,
+      autoScroll: autoScroll,
       showImages: true,
     }
     this.fetchNewPosts = this.fetchNewPosts.bind(this);
@@ -123,37 +106,33 @@ export default class Subreddit extends React.Component {
     this.fetchNewPosts()
     setInterval(this.fetchNewPosts, config.refreshFrequencyInSeconds * 1000);
     setInterval(this.autoScrollIfNeeded, 1000);
-    this.postsWrapper.addEventListener('scroll', this.scrollEvent);
+    this.postsWrapper.addEventListener('mousewheel', this.scrollEvent);
   }
 
   componentWillReceiveProps(nextProps) {
     const postCount = nextProps.data.knownPosts.length;
 
-    if (this.state.postCount != postCount) {
-      this.setState({postCount});
-      notificationSound.play();
+    if (lastPostCount != postCount) {
+      lastPostCount = postCount;
+      setTimeout(() => notificationSound.play(), 1000);
     }
   }
 
   fetchNewPosts() {
-    this.timerBar.style.transition = style.timerBarFull.transition;
-    this.timerBar.style.width = style.timerBarFull.width;
-    setTimeout(() => {
-      this.timerBar.style.transition = style.timerBarRunning.transition;
-      this.timerBar.style.width = style.timerBarRunning.width;
-    }, timerBarRefilTimeInSeconds * 1000);
-    this.props.fetchNewPostsInSubreddit(this.props.id)
+    this.props.fetchNewPostsInSubreddit(this.props.id);
+    this.timerBar.start();
   }
 
   scrollEvent() {
-    this.setState({autoScroll: this.isScrollAtBottom()});
+    autoScroll = this.isScrollAtBottom();
+    this.setState({autoScroll});
   }
 
   autoScrollIfNeeded() {
-    if (this.state.autoScroll && !this.isScrollAtBottom()) {
+    if (autoScroll && !this.isScrollAtBottom()) {
       let tweenValues = {scroll: this.postsWrapper.scrollTop};
       let tween = new Tween(tweenValues)
-        .to({scroll: this.postsWrapper.scrollHeight - this.postsWrapper.offsetHeight}, 1000)
+        .to({scroll: this.postsWrapper.scrollHeight - this.postsWrapper.offsetHeight}, 500)
         .onStart((values) => tweenValues = values)
         .onComplete(() => tween = null)
         .onUpdate(() => this.postsWrapper.scrollTop = tweenValues.scroll)
@@ -161,10 +140,13 @@ export default class Subreddit extends React.Component {
         .start();
 
       function animate(time) {
-        if (tween) {
-          tween.update(time);
-          requestAnimationFrame(animate);
+        if (!tween || !autoScroll) {
+          tween = null;
+          return;
         }
+
+        tween.update(time);
+        requestAnimationFrame(animate);
       }
 
       requestAnimationFrame(animate);
@@ -180,8 +162,6 @@ export default class Subreddit extends React.Component {
   }
 
   renderPostWithId(postId, last) {
-    const postStyle = last ? style.lastPost : style.post;
-
     return(
       <div key={postId} style={last ? null : style.post}>
         <Post
@@ -203,8 +183,7 @@ export default class Subreddit extends React.Component {
         </div>
         <div style={style.bottomBar}>
           <div style={style.bottomBarItem}>
-            <div style={style.timerBarShadow}/>
-            <div ref={(timerBar) => this.timerBar = timerBar} style={style.timerBarFull}/>
+            <TimerBar ref={(timerBar) => this.timerBar = timerBar} time={config.refreshFrequencyInSeconds}/>
           </div>
           <div style={this.state.autoScroll ? style.bottomBarItem : style.bottomBarItemOff}>
             <i className="fa fa-arrow-circle-down"/>

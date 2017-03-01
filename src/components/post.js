@@ -13,16 +13,11 @@ const style = {
   date: {
     color: '#C6003F',
   },
+  leftGap: {
+    marginLeft: '20px',
+  },
   category: {
     color: '#33A6BC',
-    marginLeft: '20px',
-  },
-  postMeta: {
-    marginLeft: '20px',
-  },
-  link: {
-    color: '#CA6400',
-    textDecoration: 'none',
   },
 };
 
@@ -53,20 +48,18 @@ export default class Post extends React.PureComponent {
         </div>
         <div>
           <span style={style.date}>{dateformat(this.props.post.date * 1000, 'h:MM:ss TT')}</span>
-          {this.props.post.category && (<span style={style.category}>{this.props.post.category}</span>)}
-          <span style={style.postMeta}><i className="fa fa-comment-o"/> {this.props.post.commentsCount}</span>
-          <span style={style.postMeta}><i className="fa fa-thumbs-o-up"/> {this.props.post.upVotes}</span>
-          <span style={style.postMeta}><i className="fa fa-thumbs-o-down"/> {this.props.post.downVotes}</span>
+          {this.props.post.category && (
+            <span style={_.merge({}, style.leftGap, style.category)}>{this.props.post.category}</span>
+          )}
+          <span style={style.leftGap}><i className="fa fa-comment-o"/> {this.props.post.commentsCount}</span>
+          <span style={style.leftGap}><i className="fa fa-thumbs-o-up"/> {this.props.post.upVotes}</span>
+          <span style={style.leftGap}><i className="fa fa-thumbs-o-down"/> {this.props.post.downVotes}</span>
           {this.props.revisions.length > 0 && (
-            <span style={style.postMeta}><i className="fa fa-code-fork"/> {this.props.revisions.length}</span>
+            <span style={style.leftGap}><i className="fa fa-code-fork"/> {this.props.revisions.length}</span>
           )}
         </div>
         {this.props.post.url && (
-          <div>
-            <Link href={this.props.post.url} style={style.link}>
-              {this.props.post.url}
-            </Link>
-          </div>
+          <div><Link href={this.props.post.url}>{this.props.post.url}</Link></div>
         )}
         {this.props.post.images.length > 0 && (
           <div>{this.props.post.images.map(this.renderImage)}</div>
