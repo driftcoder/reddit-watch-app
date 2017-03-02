@@ -31,11 +31,10 @@ const style = {
 
 export default class BottomBar extends React.PureComponent {
   static propTypes = {
-    hideImages: React.PropTypes.func.isRequired,
-    showImages: React.PropTypes.func.isRequired,
-    showBigImages: React.PropTypes.func.isRequired,
-    imagesShown: React.PropTypes.bool.isRequired,
-    bigImagesShown: React.PropTypes.bool.isRequired,
+    setShowImages: React.PropTypes.func.isRequired,
+    setBigImages: React.PropTypes.func.isRequired,
+    showImages: React.PropTypes.bool.isRequired,
+    bigImages: React.PropTypes.bool.isRequired,
     autoscroll: React.PropTypes.bool.isRequired,
 
     startTimerRef: React.PropTypes.func.isRequired,
@@ -51,11 +50,11 @@ export default class BottomBar extends React.PureComponent {
   }
 
   showImagesClickEvent() {
-    this.props.imagesShown ? this.props.hideImages() : this.props.showImages();
+    this.props.setShowImages(!this.props.showImages);
   }
 
   bigImagesClickEvent() {
-    this.props.bigImagesShown ? this.props.showImages() : this.props.showBigImages();
+    this.props.setBigImages(!this.props.bigImages);
   }
 
   render() {
@@ -72,10 +71,10 @@ export default class BottomBar extends React.PureComponent {
             {this.props.error}
           </div>
         )}
-        <div style={_.merge({}, style.item, style.option, !this.props.bigImagesShown && style.off)}>
+        <div style={_.merge({}, style.item, style.option, !this.props.bigImages && style.off)}>
           <i className="fa fa-plus-square" onClick={this.bigImagesClickEvent}/>
         </div>
-        <div style={_.merge({}, style.item, style.option, !this.props.imagesShown && style.off)}>
+        <div style={_.merge({}, style.item, style.option, !this.props.showImages && style.off)}>
           <i className="fa fa-picture-o" onClick={this.showImagesClickEvent}/>
         </div>
       </div>

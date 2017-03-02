@@ -4,8 +4,8 @@ import imageComponent from 'components/post/image.js';
 
 const mapStateToProps = (state) => {
   return {
-    imagesShown: state.preferences.showImages,
-    bigImagesShown: state.preferences.showBigImages,
+    showImages: state.preferences.showImages,
+    bigImages: state.preferences.bigImages,
   };
 };
 

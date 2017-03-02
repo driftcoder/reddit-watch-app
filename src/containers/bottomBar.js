@@ -1,21 +1,20 @@
 import {connect} from 'react-redux';
 
-import {hideImages, showImages, showBigImages} from 'actions/preferences.js';
+import {setShowImages, setBigImages} from 'actions/preferences.js';
 import bottomBarComponent from 'components/bottomBar.js';
 
 const mapStateToProps = (state) => {
   return {
-    imagesShown: state.preferences.showImages,
-    bigImagesShown: state.preferences.showBigImages,
+    showImages: state.preferences.showImages,
+    bigImages: state.preferences.bigImages,
     autoscroll: state.preferences.autoscroll,
   };
 };
 
 const mapDispatchToProps = (dispatch) => {
   return {
-    hideImages: () => dispatch(hideImages()),
-    showImages: () => dispatch(showImages()),
-    showBigImages: () => dispatch(showBigImages()),
+    setShowImages: (show) => dispatch(setShowImages(show)),
+    setBigImages: (big) => dispatch(setBigImages(big)),
   };
 };
 

@@ -1,4 +1,5 @@
 - Refactor more
+  - error through redux
 - Better API call. raw_json
 - Hash needs to include title, body, url, image_url
 - Add subreddit select screen
@@ -21,4 +22,3 @@
 - Auto body parsing (links, images)
 - Stars
 - Tabs
-- Smarter image sizing. Allow fullsize.
