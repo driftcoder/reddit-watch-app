@@ -3,7 +3,7 @@ import marked from 'marked';
 import React from 'react';
 
 import Link from 'components/link.js';
-import Image from 'components/post/image.js';
+import Image from 'containers/post/image.js';
 import Title from 'components/post/title.js';
 
 const style = {
@@ -25,7 +25,6 @@ export default class Post extends React.PureComponent {
   static propTypes = {
     post: React.PropTypes.object.isRequired,
     revisions: React.PropTypes.array,
-    showImages: React.PropTypes.bool,
   }
 
   constructor(props) {
@@ -36,7 +35,7 @@ export default class Post extends React.PureComponent {
 
   renderImage(src, index) {
     return (
-      <Image key={index} src={src} collapsed={!this.props.showImages}/>
+      <Image key={index} src={src}/>
     );
   }
 

@@ -1,4 +1,3 @@
-import _ from 'lodash';
 import React from 'react';
 
 const timerBarRefilTimeInSeconds = 0.5;
@@ -28,6 +27,13 @@ const style = {
 export default class TimerBar extends React.PureComponent {
   static propTypes = {
     time: React.PropTypes.number.isRequired,
+    startRef: React.PropTypes.func.isRequired,
+  }
+
+  constructor(props) {
+    super(props);
+    this.start = this.start.bind(this);
+    this.timerBarRefEvent = this.timerBarRefEvent.bind(this);
   }
 
   start() {
@@ -39,11 +45,16 @@ export default class TimerBar extends React.PureComponent {
     }, timerBarRefilTimeInSeconds * 1000);
   }
 
+  timerBarRefEvent(timerBar) {
+    this.timerBar = timerBar;
+    this.props.startRef(this.start);
+  }
+
   render() {
     return (
       <div>
         <div style={style.shadow}/>
-        <div ref={(timerBar) => this.timerBar = timerBar} style={style.full}/>
+        <div ref={this.timerBarRefEvent} style={style.full}/>
       </div>
     );
   }
