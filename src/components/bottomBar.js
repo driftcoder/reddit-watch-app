@@ -36,11 +36,11 @@ export default class BottomBar extends React.PureComponent {
     showBigImages: React.PropTypes.func.isRequired,
     imagesShown: React.PropTypes.bool.isRequired,
     bigImagesShown: React.PropTypes.bool.isRequired,
+    autoscroll: React.PropTypes.bool.isRequired,
 
     startTimerRef: React.PropTypes.func.isRequired,
     time: React.PropTypes.number.isRequired,
 
-    autoScroll: React.PropTypes.bool,
     error: React.PropTypes.string,
   }
 
@@ -64,7 +64,7 @@ export default class BottomBar extends React.PureComponent {
         <div style={style.item}>
           <TimerBar startRef={this.props.startTimerRef} time={this.props.time}/>
         </div>
-        <div style={_.merge({}, style.item, !this.props.autoScroll && style.off)}>
+        <div style={_.merge({}, style.item, !this.props.autoscroll && style.off)}>
           <i className="fa fa-arrow-circle-down"/>
         </div>
         {this.props.error && (

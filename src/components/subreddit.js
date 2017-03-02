@@ -42,18 +42,16 @@ let autoScroll;
 export default class Subreddit extends React.Component {
   static propTypes = {
     fetchNewPostsInSubreddit: React.PropTypes.func.isRequired,
+    setAutoscroll: React.PropTypes.func.isRequired,
+    data: React.PropTypes.object.isRequired,
 
     id: React.PropTypes.string.isRequired,
-    data: React.PropTypes.object.isRequired,
   }
 
   constructor(props) {
     super(props);
     lastPostCount = 0;
     autoScroll = true;
-    this.state = {
-      autoScroll: autoScroll,
-    }
     this.fetchNewPosts = this.fetchNewPosts.bind(this);
     this.autoScrollIfNeeded = this.autoScrollIfNeeded.bind(this);
     this.scrollEvent = _.throttle(this.scrollEvent.bind(this), 100);
@@ -82,7 +80,7 @@ export default class Subreddit extends React.Component {
 
   scrollEvent() {
     autoScroll = this.isScrollAtBottom();
-    this.setState({autoScroll});
+    this.props.setAutoscroll(autoScroll);
   }
 
   autoScrollIfNeeded() {
@@ -137,7 +135,6 @@ export default class Subreddit extends React.Component {
           startTimerRef={(startTimer) => this.startTimer = startTimer}
           time={config.refreshFrequencyInSeconds}
           error={this.props.data.error}
-          autoScroll={this.state.autoScroll}
         />
       </div>
     );
