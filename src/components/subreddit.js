@@ -1,7 +1,7 @@
 import _ from 'lodash';
 import Howler from 'howler';
 import React from 'react';
-import { Tween, Easing } from 'tween.js';
+import {Tween, Easing} from 'tween.js';
 
 import config from 'config/config.js';
 import BottomBar from 'containers/bottomBar.js';
@@ -134,7 +134,6 @@ export default class Subreddit extends React.Component {
         <BottomBar
           startTimerRef={(startTimer) => this.startTimer = startTimer}
           time={config.refreshFrequencyInSeconds}
-          error={this.props.data.error}
         />
       </div>
     );

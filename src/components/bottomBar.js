@@ -36,11 +36,10 @@ export default class BottomBar extends React.PureComponent {
     showImages: React.PropTypes.bool.isRequired,
     bigImages: React.PropTypes.bool.isRequired,
     autoscroll: React.PropTypes.bool.isRequired,
+    error: React.PropTypes.string,
 
     startTimerRef: React.PropTypes.func.isRequired,
     time: React.PropTypes.number.isRequired,
-
-    error: React.PropTypes.string,
   }
 
   constructor(props) {

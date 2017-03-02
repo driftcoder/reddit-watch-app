@@ -64,21 +64,26 @@ function parseRedditPost(json) {
     images = json.data.preview.images.map((image) => _.unescape(image.source.url));
   }
 
-  return {
+  const shortPost = {
+    title: _.unescape(json.data.title),
+    url: _.unescape(url),
+    images: images,
+    body: _.unescape(json.data.selftext),
+  };
+
+  const hash = crypto.createHash('md5').update(JSON.stringify(shortPost)).digest('base64');
+
+  return _.merge({
     id: json.data.id,
     author: json.data.author,
     date: json.data.created_utc,
-    title: _.unescape(json.data.title),
     permalink: _.unescape(PERMALINK_BASE + json.data.permalink),
     commentsCount: json.data.num_comments,
     upVotes: json.data.ups,
     downVotes: json.data.downs,
     score: json.data.score,
-    url: _.unescape(url),
-    images: images,
     category: json.data.link_flair_text,
-    body: _.unescape(json.data.selftext),
-    hash: crypto.createHash('md5').update(json.data.selftext).digest('base64'),
+    hash: hash,
     raw: json.data,
-  };
+  }, shortPost);
 }

@@ -8,6 +8,7 @@ const mapStateToProps = (state) => {
     showImages: state.preferences.showImages,
     bigImages: state.preferences.bigImages,
     autoscroll: state.preferences.autoscroll,
+    error: state.error,
   };
 };
 

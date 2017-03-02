@@ -1,3 +1,4 @@
+import {setError} from 'actions/error.js';
 import * as RedditClient from 'services/redditClient.js';
 
 export const PROCESS_POSTS = 'PROCESS_POSTS';
@@ -8,7 +9,7 @@ export function fetchNewPostsInSubreddit(subreddit) {
     return RedditClient.fetchNewPostsInSubreddit(subreddit).then((data) => {
       dispatch(processPosts(data));
     }).catch((error) => {
-      dispatch(fetchFailed(error));
+      dispatch(setError(error.message));
     });
   };
 }
@@ -18,11 +19,4 @@ export function processPosts(data) {
     type: PROCESS_POSTS,
     data,
   };
-}
-
-export function fetchFailed(error) {
-  return {
-    type: FETCH_FAILED,
-    message: error.message,
-  }
 }
