@@ -1,4 +1,3 @@
-- Better API call. raw_json
 - Add subreddit select screen
 - Media embeds
 - Markdown parsing
@@ -19,3 +18,4 @@
 - Auto body parsing (links, images)
 - Stars
 - Tabs
+- Search

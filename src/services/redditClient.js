@@ -3,7 +3,7 @@ import crypto from 'crypto';
 
 import Fetch from 'isomorphic-fetch';
 
-const API_ENDPOINT_PATTERN = 'https://www.reddit.com/r/$1/new.json';
+const API_ENDPOINT_PATTERN = 'https://www.reddit.com/r/$1/new.json?raw_json=1';
 const PERMALINK_BASE = 'https://reddit.com';
 const ERROR_BAD_RESPONSE = 'Bad response from server';
 const ERROR_INVALID_JSON = 'Bad response format';
@@ -61,14 +61,14 @@ function parseRedditPost(json) {
   }
 
   if (json.data.preview) {
-    images = json.data.preview.images.map((image) => _.unescape(image.source.url));
+    images = json.data.preview.images.map((image) => image.source.url);
   }
 
   const shortPost = {
-    title: _.unescape(json.data.title),
-    url: _.unescape(url),
+    title: json.data.title,
+    url: url,
     images: images,
-    body: _.unescape(json.data.selftext),
+    body: json.data.selftext,
   };
 
   const hash = crypto.createHash('md5').update(JSON.stringify(shortPost)).digest('base64');
@@ -77,7 +77,7 @@ function parseRedditPost(json) {
     id: json.data.id,
     author: json.data.author,
     date: json.data.created_utc,
-    permalink: _.unescape(PERMALINK_BASE + json.data.permalink),
+    permalink: PERMALINK_BASE + json.data.permalink,
     commentsCount: json.data.num_comments,
     upVotes: json.data.ups,
     downVotes: json.data.downs,
